@@ -2,15 +2,17 @@
 <html>
     <head>
         <meta charset="utf-8">
-        {% if title%}
+        {% if title %}
         <title> {{ title }}</title>
         {% else %}
         <title> Welcome to Blogs </title>
         {% endif %}
-        {% extends 'base.html'%}
+        {% extends 'bootstrap/base.html'%}
     </head>
     <body>
-        <h1>Welcome to Blogs</h1>
-        
+        <!-- Content block -->
+
+        {% block content %}
+        {% endblock %}
     </body>
 </html>
