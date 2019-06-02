@@ -1,7 +1,7 @@
 from flask import render_template
-from app import app
-from .models import reviews
+from . import main
 from .forms import ReviewForm
+from ..models import Review
 Review = review.Review
 # Views
 @app.route('/')
