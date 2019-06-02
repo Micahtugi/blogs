@@ -1,6 +1,8 @@
 from flask import render_template
 from app import app
-
+from .models import reviews
+from .forms import ReviewForm
+Review = review.Review
 # Views
 @app.route('/')
 def index():
