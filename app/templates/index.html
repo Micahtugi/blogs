@@ -1,16 +1,47 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        {% if title%}
-        <title> {{ title }}</title>
-        {% else %}
-        <title> Welcome to Blogs </title>
-        {% endif %}
-        {% extends 'base.html'%}
-    </head>
-    <body>
-        <h1>Welcome to Blogs</h1>
-        
-    </body>
-</html>
+{% extends 'base.html'%}
+{% import 'macros.html' as macro %}
+
+{% block styles%}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+
+<!-- <div style="color:white; background-image: url(https://images.pexels.com/photos/355948/pexels-photo-355948.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940); background-size: cover; background-repeat: no-repeat;"> -->
+  <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <div class="container" style="font-family: 'Indie Flower', cursive;" style="text-align: center;">
+      <div class="row">
+        <h4 class="text-left" ><a class="btn btn-success" href="/add/category">  Add a Blog </a></h4>
+
+          <div class='jumbotron' style='opacity:0.9;'>{{ macro.displayCategoryList(categories) }}</div>
+          <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
+        </div>
+    </div>
+    <div class='jumbotron'>
+        <h4>My name is Micah Mutugi and welcome to my blog!!</h4>
+    </div>
+
+{% endblock %}
+{% macro displayBlogs(blog_list) %}
+  {% for blogs in blog_list %}
+    <div class="col-md-6">
+      <div class="well">
+        <div class="row">
+          <div class="col-md-6">
+              <h3>{{blogs.content}}</h3>
+          </div>
+          <div class="col-md-6">
+            <p>POSTED: {{blogs.date_posted.strftime('%Y/%m/%d || %r')}}</p>
+            <a href="/blog/{{blogs.id}}"><h4>DROP A COMMENT</h4></a>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+    
+  {% endfor %}
+{% endmacro %}
+
+
+  

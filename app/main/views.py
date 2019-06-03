@@ -1,8 +1,7 @@
-from flask import render_template
+from flask import render_template,request,redirect,url_for,abort
 from . import main
 from .forms import ReviewForm
-from ..models import Review
-from flask_login import login_required
+from ..models import Review, User
 # Review = review.Review
 # Views
 @main.route('/')
@@ -27,3 +26,9 @@ def index():
     
     title = 'Home - Welcome to Blogs'
     return render_template('index.html', title = title)
+@main.route('/user/<uname>')
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
+    return render_template("profile/profile.html", user = user)
