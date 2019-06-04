@@ -21,3 +21,9 @@ class CommentForm(FlaskForm):
     '''
     opinion = TextAreaField('WRITE COMMENT')
     submit = SubmitField('SUBMIT')
+class BlogForm(FlaskForm):
+    '''
+    Class to create a wtf form for creating a blog
+    '''
+    name =  StringField('Category Name', validators=[Required()])
+    submit = SubmitField('Create')

@@ -1,6 +1,6 @@
 from flask import render_template,request,redirect,url_for,abort
 from . import main
-from .forms import ReviewForm,CategoryForm,CommentForm
+from .forms import ReviewForm,CategoryForm,CommentForm,BlogForm
 from ..models import BlogCategory,Blog
 # from ..models import Review
 # Review = review.Review
@@ -21,7 +21,7 @@ def index():
 # @login_required
 def new_blog(id):
     ''' Function to check Blogs form and fetch data from the fields '''
-    # form = BlogForm()
+    form = BlogForm()
     category = BlogCategory.query.filter_by(id=id).first()
 
     if category is None:
@@ -33,7 +33,7 @@ def new_blog(id):
         new_blog.save_blog()
         return redirect(url_for('.category', id=category.id))
 
-    return render_template('new_blod.html', blog_form=form, category=category)
+    return render_template('new_blog.html', blog_form=form, category=category)
 
 @main.route('/categories/<int:id>')
 def category(id):
