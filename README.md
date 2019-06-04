@@ -23,7 +23,7 @@ Flask
 |User clicks on profile| A list of blogs is displayed|
 
 ### Known Bugs
-There are no known bugs yet but incase of any feel free to write me an email at micahkimathi@gmail.com
+There are a few errors in the application such as the delete blog functionality and the post blog functionality but they will soon be fixed.
 ## Contact information
 You can reach out to me by simply writing me an email at micahkimathi@gmail.com
 
