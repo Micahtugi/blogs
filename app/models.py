@@ -84,7 +84,7 @@ class Blog(db.Model):
 
 
 
-    def save_blogs(self):
+    def save_blog(self):
         ''' Save the blocks '''
         db.session.add(self)
         db.session.commit()

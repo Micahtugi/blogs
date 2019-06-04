@@ -16,7 +16,7 @@
         <p>{{blogs.name|upper}}</p></a>
         <div class="col-md-10 col-sm-12">
             <h3>{{blogs.content}}</h3>
-              <h4>  <span><a href=" {{url_for('.view_blog',id=blogs.id)}}">Read comments</a></span>  </h4>
+              <h4>  <span><a href=" {{url_for('.view_blogs',id=blogs.id)}}">Read comments</a></span>  </h4>
 
             <a href=" {{url_for('.post_comment',id=blogs.id)}}"><h4>COMMENT</h4></a>
         </div>

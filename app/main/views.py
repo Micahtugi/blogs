@@ -1,7 +1,7 @@
 from flask import render_template,request,redirect,url_for,abort
 from . import main
 from .forms import ReviewForm,CategoryForm,CommentForm,BlogForm
-from ..models import BlogCategory,Blog
+from ..models import BlogCategory,Blog,Comments
 # from ..models import Review
 # Review = review.Review
 #display categories on the landing page
@@ -18,7 +18,7 @@ def index():
 
 
 @main.route('/category/new-blog/<int:id>', methods=['GET', 'POST'])
-# @login_required
+#@login_required
 def new_blog(id):
     ''' Function to check Blogs form and fetch data from the fields '''
     form = BlogForm()
@@ -28,8 +28,8 @@ def new_blog(id):
         abort(404)
 
     if form.validate_on_submit():
-        content = form.content.data
-        new_blog= Blog(content=content,category_id= category.id,user_id=current_user.id)
+        content= form.content.data
+        new_blog= Blog(content=content,category_id= category.id)
         new_blog.save_blog()
         return redirect(url_for('.category', id=category.id))
 
@@ -71,14 +71,14 @@ def view_blogs(id):
     Function the returns a single pitch for comment to be added
     '''
     print(id)
-    blogs = blogs.query.get(id)
+    blogs = Blog.query.get(id)
 
 
     if blogs is None:
         abort(404)
     #
     comment = Comments.get_comments(id)
-    return render_template('view-blog.html', Blogs=Blogs, comment=comment, category_id=id)
+    return render_template('view-blog.html', blogs=blogs, comment=comment, category_id=id)
 
 
 #adding a comment
@@ -88,15 +88,15 @@ def post_comment(id):
     ''' function to post comments '''
     form = CommentForm()
     title = 'post comment'
-    blogs = Blogs.query.filter_by(id=id).first()
+    blogs = Blog.query.filter_by(id=id).first()
 
     if blogs is None:
          abort(404)
 
     if form.validate_on_submit():
         opinion = form.opinion.data
-        new_comment = Comments(opinion=opinion, user_id=current_user.id, blogs_id=blogs.id)
+        new_comment = Comments(opinion=opinion, blogs_id=blogs.id)
         new_comment.save_comment()
-        return redirect(url_for('.view_blog', id=blogs.id))
+        return redirect(url_for('.view_blogs', id=blogs.id))
 
     return render_template('post_comment.html', comment_form=form, title=title)
