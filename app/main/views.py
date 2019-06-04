@@ -1,4 +1,4 @@
-from flask import render_template,request,redirect,url_for,abort
+from flask import render_template,redirect,url_for,abort
 from . import main
 from .forms import ReviewForm,CategoryForm,CommentForm,BlogForm
 from ..models import BlogCategory,Blog,Comments
