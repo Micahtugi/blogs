@@ -2,64 +2,146 @@ from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from . import login_manager
+from datetime import datetime
+from sqlalchemy.sql import func
+
 @login_manager.user_loader
 def load_user(user_id):
+    '''
+    @login_manager.user_loader Passes in a user_id to this function
+    Function queries the database and gets a user's id as a response
+    '''
     return User.query.get(int(user_id))
-class Role(db.Model):
-    __tablename__='roles'
-    
-    id = db.Column(db.Integer,primary_key = True)
-    name = db.Column(db.String(255))
-    users = db.relationship('User',backref = 'role',lazy="dynamic")
-    def __repr__(self):
-        return f'User {self.name}'
+
+
 
 class User(UserMixin,db.Model):
+    """ class modelling the users """
+
     __tablename__='users'
+
+    #create the columns
     id = db.Column(db.Integer,primary_key = True)
-    username = db.Column(db.String(255),index = True)
-    email = db.Column(db.String(255),unique = True,index = True)
+    username = db.Column(db.String(255))
+    email = db.Column(db.String(255),unique = True, index =True)
+    password_hash = db.Column(db.String(255))
+    pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-    pass_secure = db.Column(db.String(255))
+    pitches = db.relationship("Blog", backref="user1", lazy = "dynamic")
+    comment = db.relationship("Comments", backref="user2", lazy = "dynamic")
+    vote = db.relationship("Votes", backref="user3", lazy = "dynamic")
+
+
+    # securing passwords
     @property
     def password(self):
-        raise AttributeError('You cannot read the password attribute')
+        raise AttributeError('You can not read the password Attribute')
+
     @password.setter
     def password(self, password):
         self.pass_secure = generate_password_hash(password)
+
     def verify_password(self,password):
         return check_password_hash(self.pass_secure,password)
-    role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))
+
     def __repr__(self):
         return f'User {self.username}'
-    
-class Review:
 
-    all_reviews = []
+#category model
+class BlogCategory(db.Model):
 
-    def __init__(self,movie_id,title,imageurl,review):
-        self.movie_id = movie_id
-        self.title = title
-        self.imageurl = imageurl
-        self.review = review
+    __tablename__ = 'categories'
 
+    # table columns
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    description = db.Column(db.String(255))
 
-    def save_review(self):
-        Review.all_reviews.append(self)
-
-
-    @classmethod
-    def clear_reviews(cls):
-        Review.all_reviews.clear()
+    # save blogs
+    def save_category(self):
+        db.session.add(self)
+        db.session.commit()
 
     @classmethod
-    def get_reviews(cls,id):
+    def get_categories(cls):
+        categories = BlogCategory.query.all()
+        return categories
 
-        response = []
 
-        for review in cls.all_reviews:
-            if review.movie_id == id:
-                response.append(review)
+#blogs class
+class Blog(db.Model):
+    """ List of blogs in each category """
 
-        return response
+    __tablename__ = 'blogs'
+
+    id = db.Column(db.Integer,primary_key = True)
+    content = db.Column(db.String)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    comment = db.relationship("Comments", backref="blog1", lazy = "dynamic")
+    vote = db.relationship("Votes", backref="blog2", lazy = "dynamic")
+
+
+
+    def save_blogs(self):
+        ''' Save the blocks '''
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def clear_(cls):
+        Blog.all_blogs.clear()
+
+    # display blogs
+
+    def get_blogs(id):
+        blogs = Blog.query.filter_by(category_id=id).all()
+        return blogs
+
+
+# comments
+class Comments(db.Model):
+    '''User comment model for each blog '''
+
+    __tablename__ = 'comments'
+
+    # add columns
+    id = db.Column(db. Integer, primary_key=True)
+    opinion = db.Column(db.String(255))
+    time_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    blogs_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
+
+
+    def save_comment(self):
+        '''
+        Save the Comments/comments per blog
+        '''
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(self, id):
+        comment = Comments.query.order_by(
+            Comments.time_posted.desc()).filter_by(blogs_id=id).all()
+        return comment
+
+#votes
+class Votes(db.Model):
+    '''class to model votes '''
+    __tablename__='votes'
+
+    id = db.Column(db. Integer, primary_key=True)
+    vote = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    blogs_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
+
+    def save_vote(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_votes(cls,user_id,blogs_id):
+        votes = Vote.query.filter_by(user_id=user_id, blogs_id=blogs_id).all()
+        return votes

@@ -9,9 +9,9 @@
 {% block content %}
 <div class="container">
      <div class="col-md-12">
-        <p class="text-left"><a class="btn btn-primary" href="{{url_for('.new_pitch',id=pitches.category_id)}}">Post Pitch</a></p>
+        <p class="text-left"><a class="btn btn-primary" href="{{url_for('.new_blogs',id=blogs.category_id)}}">Post Blog</a></p>
         <div class="well" style="background-color:aquamarine">
-          <h3>{{pitches.content}}</h3>
+          <h3>{{blogs.content}}</h3>
         </div>
 
 <!--end of content block-->
@@ -20,14 +20,14 @@
         <div class="col-md-6 col-offset-1">
           <table>
             <tr>
-              <td><h4 class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    Comments   <a class="btn btn-primary" href="{{url_for('.post_comment',id=pitches.id)}}"> Add your comment</a></h4></td>
+              <td><h4 class="text-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    Comments   <a class="btn btn-primary" href="{{url_for('.post_comment',id=blogs.id)}}"> Add your comment</a></h4></td>
             </tr>
              
             
           </table>
 
          {% if comment %}
-         {{ macro.displaySpecificPitch(comment)}}
+         {{ macro.displaySpecificBlog(comment)}}
          <hr>
          {%else%}
          <h3 class="text-center" style="color:greenyellow;">No comments </h3>
