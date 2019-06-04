@@ -6,7 +6,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI=os.environ.get("DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI=os.environ.get("HEROKU_POSTGRESQL_WHITE_URL")
 
 class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://micah:tugi@localhost/blogs2'
